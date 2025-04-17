@@ -1,0 +1,24 @@
+# Use official Ruby base image
+FROM 383397309312.dkr.ecr.us-east-1.amazonaws.com/ruby-rails:3.2
+
+# Install dependencies
+RUN apt-get update -qq && apt-get install -y nodejs
+
+# Set working directory
+WORKDIR /app
+
+# Install bundler
+RUN gem install bundler
+
+# Copy Gemfiles and install gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+# Copy the app
+COPY . .
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start the server
+CMD ["rails", "server", "-b", "0.0.0.0"]
